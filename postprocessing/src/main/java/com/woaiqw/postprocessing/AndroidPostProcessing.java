@@ -6,11 +6,14 @@ import android.os.Looper;
 import android.os.Message;
 import android.os.Process;
 import android.support.annotation.NonNull;
+import android.util.Log;
 
 import com.woaiqw.postprocessing.model.AppDelegate;
+import com.woaiqw.postprocessing.utils.ClassUtils;
 import com.woaiqw.postprocessing.utils.WeakHandler;
 
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -21,6 +24,8 @@ import java.util.concurrent.atomic.AtomicBoolean;
  * Created by haoran on 2018/10/10.
  */
 public class AndroidPostProcessing {
+
+    private volatile static Application app;
 
     private volatile static AndroidPostProcessing instance = null;
 
@@ -46,23 +51,33 @@ public class AndroidPostProcessing {
     }
 
 
-    private AndroidPostProcessing() {
-        initAppDelegateMap();
+    private AndroidPostProcessing(@NonNull final Application app) {
+        initAppDelegateMap(app);
         initCompleted.set(true);
     }
 
-    public static AndroidPostProcessing initialization() {
+    public static AndroidPostProcessing initialization(@NonNull final Application app) {
         if (null == instance) {
             synchronized (AndroidPostProcessing.class) {
                 if (null == instance)
-                    instance = new AndroidPostProcessing();
+                    instance = new AndroidPostProcessing(app);
             }
         }
         return instance;
     }
 
 
-    private void initAppDelegateMap() {
+    private void initAppDelegateMap(@NonNull final Application app) {
+
+        try {
+            List<String> classFileNames = ClassUtils.getFileNameByPackageName(app, "com.woaiqw.generate");
+            for (String className : classFileNames) {
+                String s = Class.forName(className).newInstance().toString();
+                Log.d("111", s);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         //TODO: processor annotation
         AppDelegate agent = new AppDelegate();
 //        agent.setAgent();
@@ -73,7 +88,10 @@ public class AndroidPostProcessing {
         map.put("key", agent);
     }
 
-    public void dispatcher(@NonNull final Application app) {
+    public void dispatcher() {
+        if (app == null)
+            throw new RuntimeException(" AndroidPostProcessing must init ");
+
         for (Map.Entry<String, AppDelegate> entry : map.entrySet()) {
             final AppDelegate value = entry.getValue();
             if (value.isAsync()) {

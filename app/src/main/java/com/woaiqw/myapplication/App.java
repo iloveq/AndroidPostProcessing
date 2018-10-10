@@ -12,7 +12,7 @@ public class App extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        AndroidPostProcessing.initialization().dispatcher(this);
+        AndroidPostProcessing.initialization(this).dispatcher();
     }
 
     @Override
