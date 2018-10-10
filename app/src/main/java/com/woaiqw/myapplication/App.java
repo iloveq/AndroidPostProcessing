@@ -14,4 +14,10 @@ public class App extends Application {
         super.onCreate();
         AndroidPostProcessing.initialization().dispatcher(this);
     }
+
+    @Override
+    public void onTerminate() {
+        super.onTerminate();
+        AndroidPostProcessing.release();
+    }
 }

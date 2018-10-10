@@ -18,7 +18,7 @@ public class AndroidPostProcessing {
 
     private volatile static AndroidPostProcessing instance = null;
 
-    private volatile LinkedHashMap<String, AppDelegate> map = new LinkedHashMap<>(32, 0.75f, true);
+    private volatile static LinkedHashMap<String, AppDelegate> map;
 
     private volatile static ScheduledExecutorService taskPool;
 
@@ -26,6 +26,7 @@ public class AndroidPostProcessing {
     static {
         int CPU_COUNT = Runtime.getRuntime().availableProcessors();
         int CORE_POOL_SIZE = Math.max(2, Math.min(CPU_COUNT - 1, 4));
+        map = new LinkedHashMap<>(32, 0.75f, true);
         taskPool = Executors.newScheduledThreadPool(CORE_POOL_SIZE);
     }
 
@@ -65,11 +66,10 @@ public class AndroidPostProcessing {
             } else {
                 value.getAgent().dispatcher(app);
             }
-
         }
     }
 
-    public void release() {
+    public static void release() {
         map.clear();
         taskPool.shutdown();
     }
