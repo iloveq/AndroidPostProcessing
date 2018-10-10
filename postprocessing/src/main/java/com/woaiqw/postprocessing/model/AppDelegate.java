@@ -1,11 +1,13 @@
 package com.woaiqw.postprocessing.model;
 
+import android.support.annotation.NonNull;
+
 import com.woaiqw.postprocessing.IApp;
 
 /**
  * Created by haoran on 2018/10/10.
  */
-public class AppDelegate {
+public class AppDelegate implements Comparable<AppDelegate> {
 
     IApp agent;
     String name;
@@ -63,5 +65,11 @@ public class AppDelegate {
                 ", isAsync=" + isAsync +
                 ", delay=" + delay +
                 '}';
+    }
+
+
+    @Override
+    public int compareTo(@NonNull AppDelegate o) {
+        return this.getPriority()-o.getPriority();
     }
 }

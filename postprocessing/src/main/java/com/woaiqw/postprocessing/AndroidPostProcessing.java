@@ -6,15 +6,15 @@ import android.os.Looper;
 import android.os.Message;
 import android.os.Process;
 import android.support.annotation.NonNull;
-import android.util.Log;
 
 import com.woaiqw.postprocessing.model.AppDelegate;
 import com.woaiqw.postprocessing.utils.ClassUtils;
 import com.woaiqw.postprocessing.utils.WeakHandler;
 
-import java.util.LinkedHashMap;
+import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -29,7 +29,7 @@ public class AndroidPostProcessing {
 
     private volatile static AndroidPostProcessing instance = null;
 
-    private volatile static LinkedHashMap<String, AppDelegate> map;
+    private volatile static List<AppDelegate> agents = new ArrayList<>();
 
     private volatile static ScheduledExecutorService taskPool;
 
@@ -46,7 +46,6 @@ public class AndroidPostProcessing {
     static {
         int CPU_COUNT = Runtime.getRuntime().availableProcessors();
         int CORE_POOL_SIZE = Math.max(2, Math.min(CPU_COUNT - 1, 4));
-        map = new LinkedHashMap<>(32, 0.75f, true);
         taskPool = Executors.newScheduledThreadPool(CORE_POOL_SIZE);
     }
 
@@ -67,48 +66,79 @@ public class AndroidPostProcessing {
     }
 
 
-    private void initAppDelegateMap(@NonNull final Application app) {
-
+    private void initAppDelegateMap(@NonNull final Application application) {
+        app = application;
         try {
-            List<String> classFileNames = ClassUtils.getFileNameByPackageName(app, "com.woaiqw.generate");
-            for (String className : classFileNames) {
-                String s = Class.forName(className).newInstance().toString();
-                Log.d("111", s);
+            List<String> list = ClassUtils.getFileNameByPackageName(application, "com.woaiqw.generate");
+            for (String classPath : list) {
+                Class clazz = Class.forName(classPath);
+                Field[] fields = clazz.getFields();
+
+                if (fields != null && fields.length != 0) {
+                    IApp app = null;
+                    String name = "Main";
+                    int priority = 0;
+                    boolean async = false;
+                    long delay = 0;
+                    for (Field field : fields) {
+                        String fieldName = field.getName();
+                        Object o = field.get(fieldName);
+                        switch (fieldName) {
+                            case "path":
+                                app = (IApp) Class.forName((String) o).newInstance();
+                                break;
+                            case "name":
+                                name = (String) o;
+                                break;
+                            case "priority":
+                                priority = (int) o;
+                                break;
+                            case "async":
+                                async = (boolean) o;
+                                break;
+                            case "delay":
+                                delay = (long) o;
+                                break;
+                        }
+                    }
+                    AppDelegate agent = new AppDelegate();
+                    agent.setAgent(app);
+                    agent.setName(name);
+                    agent.setPriority(priority);
+                    agent.setAsync(async);
+                    agent.setDelayTime(delay);
+                    agents.add(agent);
+                }
             }
+            Collections.sort(agents);
         } catch (Exception e) {
             e.printStackTrace();
         }
-        //TODO: processor annotation
-        AppDelegate agent = new AppDelegate();
-//        agent.setAgent();
-//        agent.setName();
-//        agent.setPriority();
-//        agent.setAsync();
-//        agent.setDelayTime();
-        map.put("key", agent);
+
     }
 
     public void dispatcher() {
         if (app == null)
             throw new RuntimeException(" AndroidPostProcessing must init ");
 
-        for (Map.Entry<String, AppDelegate> entry : map.entrySet()) {
-            final AppDelegate value = entry.getValue();
-            if (value.isAsync()) {
-                taskPool.schedule(new Runnable() {
-                    @Override
-                    public void run() {
-                        Process.setThreadPriority(Process.THREAD_PRIORITY_BACKGROUND);
-                        value.getAgent().dispatcher(app);
-                    }
-                }, value.getDelayTime(), TimeUnit.MILLISECONDS);
-            } else {
-                h.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        value.getAgent().dispatcher(app);
-                    }
-                });
+        if (agents != null && agents.size() > 0) {
+            for (final AppDelegate agent : agents) {
+                if (agent.isAsync()) {
+                    taskPool.schedule(new Runnable() {
+                        @Override
+                        public void run() {
+                            Process.setThreadPriority(Process.THREAD_PRIORITY_BACKGROUND);
+                            agent.getAgent().dispatcher(app);
+                        }
+                    }, agent.getDelayTime(), TimeUnit.MILLISECONDS);
+                } else {
+                    h.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            agent.getAgent().dispatcher(app);
+                        }
+                    });
+                }
             }
         }
     }
@@ -116,7 +146,7 @@ public class AndroidPostProcessing {
     public static void release() {
         if (!initCompleted.get())
             throw new RuntimeException(" must init completed before the fun to release ");
-        map.clear();
+        agents.clear();
         taskPool.shutdown();
         h.removeCallbacksAndMessages(null);
     }
