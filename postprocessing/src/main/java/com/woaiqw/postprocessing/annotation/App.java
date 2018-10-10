@@ -15,6 +15,8 @@ public @interface App {
 
     String name() default "Main";
 
+    int priority() default 0;
+
     boolean async() default false;
 
     long delay() default 0;

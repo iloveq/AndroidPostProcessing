@@ -1,9 +1,14 @@
 package com.woaiqw.postprocessing;
 
 import android.app.Application;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
 import android.os.Process;
+import android.support.annotation.NonNull;
 
 import com.woaiqw.postprocessing.model.AppDelegate;
+import com.woaiqw.postprocessing.utils.WeakHandler;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -24,6 +29,13 @@ public class AndroidPostProcessing {
     private volatile static ScheduledExecutorService taskPool;
 
     private static AtomicBoolean initCompleted = new AtomicBoolean(false);
+
+    private static WeakHandler h = new WeakHandler(new Handler.Callback() {
+        @Override
+        public boolean handleMessage(Message msg) {
+            return false;
+        }
+    }, Looper.getMainLooper());
 
 
     static {
@@ -53,10 +65,15 @@ public class AndroidPostProcessing {
     private void initAppDelegateMap() {
         //TODO: processor annotation
         AppDelegate agent = new AppDelegate();
+//        agent.setAgent();
+//        agent.setName();
+//        agent.setPriority();
+//        agent.setAsync();
+//        agent.setDelayTime();
         map.put("key", agent);
     }
 
-    public void dispatcher(final Application app) {
+    public void dispatcher(@NonNull final Application app) {
         for (Map.Entry<String, AppDelegate> entry : map.entrySet()) {
             final AppDelegate value = entry.getValue();
             if (value.isAsync()) {
@@ -68,7 +85,12 @@ public class AndroidPostProcessing {
                     }
                 }, value.getDelayTime(), TimeUnit.MILLISECONDS);
             } else {
-                value.getAgent().dispatcher(app);
+                h.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        value.getAgent().dispatcher(app);
+                    }
+                });
             }
         }
     }
@@ -78,6 +100,7 @@ public class AndroidPostProcessing {
             throw new RuntimeException(" must init completed before the fun to release ");
         map.clear();
         taskPool.shutdown();
+        h.removeCallbacksAndMessages(null);
     }
 
 

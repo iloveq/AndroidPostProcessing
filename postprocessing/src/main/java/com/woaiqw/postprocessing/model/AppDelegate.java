@@ -9,8 +9,8 @@ public class AppDelegate {
 
     IApp agent;
     String name;
+    int priority;
     boolean isAsync;
-
     long delay;
 
     public IApp getAgent() {
@@ -29,6 +29,14 @@ public class AppDelegate {
         this.name = name;
     }
 
+    public int getPriority() {
+        return priority;
+    }
+
+    public void setPriority(int priority) {
+        this.priority = priority;
+    }
+
     public boolean isAsync() {
         return isAsync;
     }
@@ -44,5 +52,16 @@ public class AppDelegate {
 
     public void setDelayTime(long delay) {
         this.delay = delay;
+    }
+
+    @Override
+    public String toString() {
+        return "AppDelegate{" +
+                "agent=" + agent +
+                ", name='" + name + '\'' +
+                ", priority=" + priority +
+                ", isAsync=" + isAsync +
+                ", delay=" + delay +
+                '}';
     }
 }
