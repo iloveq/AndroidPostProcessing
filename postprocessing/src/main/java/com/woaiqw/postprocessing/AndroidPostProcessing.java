@@ -71,6 +71,7 @@ public class AndroidPostProcessing {
 
     public void release() {
         map.clear();
+        taskPool.shutdown();
     }
 
 
