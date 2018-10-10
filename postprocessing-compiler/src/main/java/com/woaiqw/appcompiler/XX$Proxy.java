@@ -6,6 +6,7 @@ package com.woaiqw.appcompiler;
 
 public final class XX$Proxy {
 
+    public static final String path = "";
     public static final String name = "XX";
     public static final int priority = 111;
     public static final boolean async = false;

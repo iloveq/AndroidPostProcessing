@@ -5,6 +5,8 @@ package com.woaiqw.appcompiler.utils;
  */
 public class Constants {
 
+    public static final CharSequence PACKAGE_NAME = "com.woaiqw.generate";
+    public static final String EXPLAIN = "* Generated code from AndroidPostProcessing . Do not modify!";
     // Log
     static final String PREFIX_OF_LOGGER = "AndroidPostProcessingLogger";
 
