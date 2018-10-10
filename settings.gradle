@@ -1,1 +1,1 @@
-include ':app', ':common', ':cache', ':hotfix', ':main', ':main', ':plugin', ':plugin', ':orm', ':postprocessing'
+include ':app', ':common', ':cache', ':hotfix', ':main', ':main', ':plugin', ':plugin', ':orm', ':postprocessing', ':postprocessing-compiler', ':postprocessing-annotation'

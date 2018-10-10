@@ -11,6 +11,8 @@
       <module fileurl="file://$PROJECT_DIR$/orm/orm.iml" filepath="$PROJECT_DIR$/orm/orm.iml" />
       <module fileurl="file://$PROJECT_DIR$/plugin/plugin.iml" filepath="$PROJECT_DIR$/plugin/plugin.iml" />
       <module fileurl="file://$PROJECT_DIR$/postprocessing/postprocessing.iml" filepath="$PROJECT_DIR$/postprocessing/postprocessing.iml" />
+      <module fileurl="file://$PROJECT_DIR$/postprocessing-annotation/postprocessing-annotation.iml" filepath="$PROJECT_DIR$/postprocessing-annotation/postprocessing-annotation.iml" />
+      <module fileurl="file://$PROJECT_DIR$/postprocessing-compiler/postprocessing-compiler.iml" filepath="$PROJECT_DIR$/postprocessing-compiler/postprocessing-compiler.iml" />
     </modules>
   </component>
 </project>

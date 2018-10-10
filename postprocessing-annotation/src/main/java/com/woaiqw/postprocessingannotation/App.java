@@ -1,4 +1,4 @@
-package com.woaiqw.postprocessing.annotation;
+package com.woaiqw.postprocessingannotation;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
