@@ -23,7 +23,7 @@ android {
 dependencies {
 
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    api "com.android.support:appcompat-v7:${versions.support_library}"
-    api project(':postprocessing')
+
+    implementation "com.android.support:appcompat-v7:${versions.support_library}"
 
 }

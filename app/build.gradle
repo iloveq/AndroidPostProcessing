@@ -21,10 +21,10 @@ android {
 
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
-
     implementation project(':cache')
     implementation project(':common')
     implementation project(':hotfix')
     implementation project(':main')
     implementation project(':plugin')
+
 }
