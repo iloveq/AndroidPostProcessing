@@ -10,6 +10,7 @@ import java.util.Map;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * Created by haoran on 2018/10/10.
@@ -22,6 +23,8 @@ public class AndroidPostProcessing {
 
     private volatile static ScheduledExecutorService taskPool;
 
+    private static AtomicBoolean initCompleted = new AtomicBoolean(false);
+
 
     static {
         int CPU_COUNT = Runtime.getRuntime().availableProcessors();
@@ -33,6 +36,7 @@ public class AndroidPostProcessing {
 
     private AndroidPostProcessing() {
         initAppDelegateMap();
+        initCompleted.set(true);
     }
 
     public static AndroidPostProcessing initialization() {
@@ -70,6 +74,8 @@ public class AndroidPostProcessing {
     }
 
     public static void release() {
+        if (!initCompleted.get())
+            throw new RuntimeException(" must init completed before the fun to release ");
         map.clear();
         taskPool.shutdown();
     }
