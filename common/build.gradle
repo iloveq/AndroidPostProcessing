@@ -25,5 +25,6 @@ dependencies {
     api "com.android.support:appcompat-v7:${versions.support_library}"
     api project(':postprocessing')
     api project(':postprocessing-annotation')
+    annotationProcessor project(':postprocessing-compiler')
 
 }

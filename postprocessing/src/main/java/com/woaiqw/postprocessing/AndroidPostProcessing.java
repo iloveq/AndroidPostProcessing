@@ -77,6 +77,7 @@ public class AndroidPostProcessing {
                 if (fields != null && fields.length != 0) {
                     IApp app = null;
                     String name = "Main";
+                    boolean type = false;
                     int priority = 0;
                     boolean async = false;
                     long delay = 0;
@@ -89,6 +90,9 @@ public class AndroidPostProcessing {
                                 break;
                             case "name":
                                 name = (String) o;
+                                break;
+                            case "debug":
+                                type = (boolean) o;
                                 break;
                             case "priority":
                                 priority = (int) o;
@@ -104,6 +108,7 @@ public class AndroidPostProcessing {
                     AppDelegate agent = new AppDelegate();
                     agent.setAgent(app);
                     agent.setName(name);
+                    agent.setType(type);
                     agent.setPriority(priority);
                     agent.setAsync(async);
                     agent.setDelayTime(delay);
@@ -123,6 +128,9 @@ public class AndroidPostProcessing {
 
         if (agents != null && agents.size() > 0) {
             for (final AppDelegate agent : agents) {
+                if (agent.getType()) {
+                    continue;
+                }
                 if (agent.isAsync()) {
                     taskPool.schedule(new Runnable() {
                         @Override
@@ -132,12 +140,12 @@ public class AndroidPostProcessing {
                         }
                     }, agent.getDelayTime(), TimeUnit.MILLISECONDS);
                 } else {
-                    h.post(new Runnable() {
+                    h.postDelayed(new Runnable() {
                         @Override
                         public void run() {
                             agent.getAgent().dispatcher(app);
                         }
-                    });
+                    }, agent.getDelayTime());
                 }
             }
         }

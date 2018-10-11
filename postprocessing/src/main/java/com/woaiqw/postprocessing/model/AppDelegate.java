@@ -11,6 +11,7 @@ public class AppDelegate implements Comparable<AppDelegate> {
 
     IApp agent;
     String name;
+    boolean type;
     int priority;
     boolean isAsync;
     long delay;
@@ -29,6 +30,14 @@ public class AppDelegate implements Comparable<AppDelegate> {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public boolean getType() {
+        return type;
+    }
+
+    public void setType(boolean debug) {
+        this.type = debug;
     }
 
     public int getPriority() {
@@ -61,15 +70,15 @@ public class AppDelegate implements Comparable<AppDelegate> {
         return "AppDelegate{" +
                 "agent=" + agent +
                 ", name='" + name + '\'' +
+                ", type=" + type +
                 ", priority=" + priority +
                 ", isAsync=" + isAsync +
                 ", delay=" + delay +
                 '}';
     }
 
-
     @Override
     public int compareTo(@NonNull AppDelegate o) {
-        return this.getPriority()-o.getPriority();
+        return this.getPriority() - o.getPriority();
     }
 }

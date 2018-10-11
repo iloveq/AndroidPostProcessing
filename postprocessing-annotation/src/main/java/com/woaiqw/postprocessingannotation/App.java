@@ -13,7 +13,12 @@ import java.lang.annotation.Target;
 @Target(ElementType.TYPE)
 public @interface App {
 
+    boolean RELEASE = false;
+    boolean DEBUG = true;
+
     String name() default "Main";
+
+    boolean type() default RELEASE;
 
     int priority() default 0;
 

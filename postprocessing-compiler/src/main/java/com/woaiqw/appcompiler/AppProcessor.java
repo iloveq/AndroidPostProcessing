@@ -56,6 +56,7 @@ public class AppProcessor extends AbstractProcessor {
             App annotation = element.getAnnotation(App.class);
 
             String name = annotation.name();
+            boolean debug = annotation.type();
             int priority = annotation.priority();
             boolean async = annotation.async();
             long delay = annotation.delay();
@@ -90,6 +91,11 @@ public class AppProcessor extends AbstractProcessor {
             builder.append("    public static final String name = \"");
             builder.append(name);
             builder.append("\";");
+            builder.append("\n");
+
+            builder.append("    public static final boolean type = ");
+            builder.append(debug);
+            builder.append(";");
             builder.append("\n");
 
             builder.append("    public static final int priority = ");
