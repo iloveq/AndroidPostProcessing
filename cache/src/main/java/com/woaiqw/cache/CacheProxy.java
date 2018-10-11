@@ -1,6 +1,7 @@
 package com.woaiqw.cache;
 
 import android.app.Application;
+import android.os.Looper;
 import android.support.annotation.NonNull;
 import android.widget.Toast;
 
@@ -15,6 +16,10 @@ public class CacheProxy implements IApp {
 
     @Override
     public void dispatcher(@NonNull Application application) {
+
+        Looper.prepare();
         Toast.makeText(application, "cache", Toast.LENGTH_SHORT).show();
+        Looper.loop();
+
     }
 }
