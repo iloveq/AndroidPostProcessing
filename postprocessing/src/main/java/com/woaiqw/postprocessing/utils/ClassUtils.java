@@ -40,32 +40,6 @@ public class ClassUtils {
         return context.getSharedPreferences(PREFS_FILE, Build.VERSION.SDK_INT < 11 ? 0 : Context.MODE_MULTI_PROCESS);
     }
 
-    public static <T> List<T> getObjectsWithInterface(Context context, Class<T> clazz, String path) {
-        ArrayList objectList = new ArrayList();
-
-        try {
-            List<String> classFileNames = getFileNameByPackageName(context, path);
-            Iterator var5 = classFileNames.iterator();
-
-            while (var5.hasNext()) {
-                String className = (String) var5.next();
-                Class aClass = Class.forName(className);
-                if (clazz.isAssignableFrom(aClass) && !clazz.equals(aClass) && !aClass.isInterface()) {
-                    objectList.add(Class.forName(className).getConstructor().newInstance());
-                }
-            }
-
-            if (objectList.size() == 0) {
-                Log.e("ClassUtils", "No files were found, check your configuration please!");
-            }
-        } catch (Exception var8) {
-            var8.getStackTrace();
-            Log.e("ClassUtils", "getObjectsWithInterface error, " + var8.getMessage());
-        }
-
-        return objectList;
-    }
-
 
     public static List<String> getFileNameByPackageName(Context context, String packageName) throws PackageManager.NameNotFoundException, IOException {
         List<String> classNames = new ArrayList<>();
