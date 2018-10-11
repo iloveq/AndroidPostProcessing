@@ -44,11 +44,9 @@ public class ClassUtils {
     public static List<String> getFileNameByPackageName(Context context, String packageName) throws PackageManager.NameNotFoundException, IOException {
         List<String> classNames = new ArrayList<>();
         Iterator var3 = getSourcePaths(context).iterator();
-
         while (var3.hasNext()) {
             String path = (String) var3.next();
             DexFile dexfile = null;
-
             try {
                 if (path.endsWith(EXTRACTED_SUFFIX)) {
                     dexfile = DexFile.loadDex(path, path + ".tmp", 0);
@@ -57,13 +55,13 @@ public class ClassUtils {
                 }
 
                 Enumeration dexEntries = dexfile.entries();
-
                 while (dexEntries.hasMoreElements()) {
                     String className = (String) dexEntries.nextElement();
                     if (className.contains(packageName)) {
                         classNames.add(className);
                     }
                 }
+
             } catch (Throwable var16) {
                 Log.e("ClassUtils", "Scan map file in dex files made error.", var16);
             } finally {
@@ -71,13 +69,11 @@ public class ClassUtils {
                     try {
                         dexfile.close();
                     } catch (Throwable var15) {
-
+                        Log.e("ClassUtils", "Scan map file in dex files made error.", var15);
                     }
                 }
-
             }
         }
-
         Log.d("ClassUtils", "Filter " + classNames.size() + " classes by packageName <" + packageName + ">");
         return classNames;
     }
@@ -91,26 +87,22 @@ public class ClassUtils {
         if (!isVMMultidexCapable()) {
             int totalDexNumber = getMultiDexPreferences(context).getInt(KEY_DEX_NUMBER, 1);
             File dexDir = new File(applicationInfo.dataDir, SECONDARY_FOLDER_NAME);
-
             for (int secondaryNumber = 2; secondaryNumber <= totalDexNumber; ++secondaryNumber) {
                 String fileName = extractedFilePrefix + secondaryNumber + EXTRACTED_SUFFIX;
                 File extractedFile = new File(dexDir, fileName);
                 if (!extractedFile.isFile()) {
                     throw new IOException("Missing extracted secondary dex file '" + extractedFile.getPath() + "'");
                 }
-
                 sourcePaths.add(extractedFile.getAbsolutePath());
             }
         }
-
         return sourcePaths;
     }
 
 
     private static boolean isVMMultidexCapable() {
         boolean isMultidexCapable = false;
-        String vmName = null;
-
+        String vmName;
         try {
             if (isYunOS()) {
                 vmName = "'YunOS'";
@@ -126,15 +118,14 @@ public class ClassUtils {
                             int minor = Integer.parseInt(matcher.group(2));
                             isMultidexCapable = major > 2 || major == 2 && minor >= 1;
                         } catch (NumberFormatException var6) {
-                            ;
+                            return false;
                         }
                     }
                 }
             }
         } catch (Exception var7) {
-            ;
+            return false;
         }
-
         Log.i("galaxy", "VM with name " + vmName + (isMultidexCapable ? " has multidex support" : " does not have multidex support"));
         return isMultidexCapable;
     }
