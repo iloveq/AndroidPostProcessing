@@ -87,7 +87,7 @@ public @interface App {
 ```
 ###### 注意:
 ① 关于多进程：每个进程都会 onCreate()  onTerminate() ，初始化时的任务表，所以互不影响，资源释放也不受影响。该库默认所有进程都存在，如果要有主进程库，可以 onCreate 添加判断条件
-② 关于调试： ctrl + shif t + F ，全局搜索 @App ，每个 IApp 接口对应的对象可以单独 Timber 出执行时间
+② 关于调试： ctrl + shif t + F ，全局搜索 @App ，每个 IApp 接口对应的对象可以单独 [hugo](https://github.com/JakeWharton/hugo) 出执行时间
 ③ 关于 async ，默认主线程，如果为true则运行在子线程，线程优先级为 background
 ###### eg:
 hotfix:
