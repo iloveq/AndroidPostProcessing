@@ -83,12 +83,12 @@ public class AppProcessor extends AbstractProcessor {
             builder.append("\n");
             builder.append("\n");
 
-            builder.append("    public static final String path = \"");
+            builder.append("    public static String path = \"");
             builder.append(path);
             builder.append("\";");
             builder.append("\n");
 
-            builder.append("    public static final String name = \"");
+            builder.append("    public static String name = \"");
             builder.append(name);
             builder.append("\";");
             builder.append("\n");

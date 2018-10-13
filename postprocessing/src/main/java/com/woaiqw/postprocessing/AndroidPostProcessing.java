@@ -25,6 +25,8 @@ import java.util.concurrent.atomic.AtomicBoolean;
  */
 public class AndroidPostProcessing {
 
+    private String parsePackageName = "com.woaiqw.generate";
+
     private volatile static Application app;
 
     private volatile static AndroidPostProcessing instance = null;
@@ -69,7 +71,7 @@ public class AndroidPostProcessing {
     private void initAppDelegateMap(@NonNull final Application application) {
         app = application;
         try {
-            List<String> list = ClassUtils.getFileNameByPackageName(application, "com.woaiqw.generate");
+            List<String> list = ClassUtils.getFileNameByPackageName(application, parsePackageName);
             for (String classPath : list) {
                 Class clazz = Class.forName(classPath);
                 Field[] fields = clazz.getFields();
