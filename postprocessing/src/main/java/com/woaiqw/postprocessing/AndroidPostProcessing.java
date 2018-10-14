@@ -131,6 +131,7 @@ public class AndroidPostProcessing {
                                 break;
                         }
                     }
+
                     AppDelegate agent = new AppDelegate();
                     agent.setAgent(app);
                     agent.setName(name);
@@ -139,9 +140,12 @@ public class AndroidPostProcessing {
                     agent.setAsync(async);
                     agent.setDelayTime(delay);
                     agents.add(agent);
+
                 }
             }
+
             Collections.sort(agents);
+
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -149,6 +153,7 @@ public class AndroidPostProcessing {
     }
 
     public void dispatcher() {
+
         if (app == null)
             throw new RuntimeException(" AndroidPostProcessing must init ");
 
@@ -175,14 +180,17 @@ public class AndroidPostProcessing {
                 }
             }
         }
+
     }
 
     public static void release() {
+
         if (!initCompleted.get())
             throw new RuntimeException(" must init completed before the fun to release ");
         agents.clear();
         taskPool.shutdown();
         h.removeCallbacksAndMessages(null);
+
     }
 
 
