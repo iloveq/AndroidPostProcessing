@@ -1,6 +1,8 @@
 package com.woaiqw.postprocessing;
 
 import android.app.Application;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
@@ -14,7 +16,9 @@ import com.woaiqw.postprocessing.utils.WeakHandler;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -26,6 +30,8 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public class AndroidPostProcessing {
 
     private String parsePackageName = "com.woaiqw.generate";
+
+    private static String TAG  = "AndroidPostProcessing";
 
     private volatile static Application app;
 
@@ -69,10 +75,23 @@ public class AndroidPostProcessing {
 
 
     private void initAppDelegateMap(@NonNull final Application application) {
+        String flag = "first_install";
+        SharedPreferences sp = application.getSharedPreferences(TAG, Context.MODE_PRIVATE);
+        SharedPreferences.Editor edit = sp.edit();
+        boolean isFirstInstall = sp.getBoolean(flag, true);
+        if (isFirstInstall) {
+            edit.putBoolean(flag, false).apply();
+        }
         app = application;
         try {
-            List<String> list = ClassUtils.getFileNameByPackageName(application, parsePackageName);
-            for (String classPath : list) {
+            Set<String> set;
+            if (isFirstInstall){
+               set = ClassUtils.getFileNameByPackageName(application, parsePackageName);
+               edit.putStringSet(TAG,set).apply();
+            }else {
+                set = sp.getStringSet(TAG,new HashSet<String>());
+            }
+            for (String classPath : set) {
                 Class clazz = Class.forName(classPath);
                 Field[] fields = clazz.getFields();
 

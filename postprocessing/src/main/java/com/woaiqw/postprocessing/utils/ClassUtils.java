@@ -11,8 +11,10 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Enumeration;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -41,8 +43,8 @@ public class ClassUtils {
     }
 
 
-    public static List<String> getFileNameByPackageName(Context context, String packageName) throws PackageManager.NameNotFoundException, IOException {
-        List<String> classNames = new ArrayList<>();
+    public static Set<String> getFileNameByPackageName(Context context, String packageName) throws PackageManager.NameNotFoundException, IOException {
+        Set<String> set = new HashSet<>();
         Iterator var3 = getSourcePaths(context).iterator();
         while (var3.hasNext()) {
             String path = (String) var3.next();
@@ -58,7 +60,7 @@ public class ClassUtils {
                 while (dexEntries.hasMoreElements()) {
                     String className = (String) dexEntries.nextElement();
                     if (className.contains(packageName)) {
-                        classNames.add(className);
+                        set.add(className);
                     }
                 }
 
@@ -74,11 +76,11 @@ public class ClassUtils {
                 }
             }
         }
-        Log.d("ClassUtils", "Filter " + classNames.size() + " classes by packageName <" + packageName + ">");
-        return classNames;
+        Log.d("ClassUtils", "Filter " + set.size() + " classes by packageName <" + packageName + ">");
+        return set;
     }
 
-    public static List<String> getSourcePaths(Context context) throws PackageManager.NameNotFoundException, IOException {
+    private static List<String> getSourcePaths(Context context) throws PackageManager.NameNotFoundException, IOException {
         ApplicationInfo applicationInfo = context.getPackageManager().getApplicationInfo(context.getPackageName(), 0);
         File sourceApk = new File(applicationInfo.sourceDir);
         List<String> sourcePaths = new ArrayList<>();
