@@ -7,12 +7,15 @@ import android.widget.Toast;
 import com.woaiqw.postprocessing.IApp;
 import com.woaiqw.postprocessingannotation.App;
 
+import hugo.weaving.DebugLog;
+
 /**
  * Created by haoran on 2018/10/10.
  */
 @App(name = "Hotfix", priority = 3)
 public class HotfixProxy implements IApp {
 
+    @DebugLog
     @Override
     public void dispatcher(@NonNull Application application) {
 

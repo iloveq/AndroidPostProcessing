@@ -7,6 +7,8 @@ import android.widget.Toast;
 import com.woaiqw.postprocessing.IApp;
 import com.woaiqw.postprocessingannotation.App;
 
+import hugo.weaving.DebugLog;
+
 
 /**
  * Created by haoran on 2018/10/11.
@@ -14,6 +16,7 @@ import com.woaiqw.postprocessingannotation.App;
 @App(name = "LeakCanary", type = App.DEBUG, priority = 1, delay = 5000)
 public class LeakCanaryProxy implements IApp {
 
+    @DebugLog
     @Override
     public void dispatcher(@NonNull Application application) {
 
