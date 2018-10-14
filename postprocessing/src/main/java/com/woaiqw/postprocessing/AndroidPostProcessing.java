@@ -29,9 +29,11 @@ import java.util.concurrent.atomic.AtomicBoolean;
  */
 public class AndroidPostProcessing {
 
-    private String parsePackageName = "com.woaiqw.generate";
+    private static final String parsePackageName = "com.woaiqw.generate";
 
-    private static String TAG  = "AndroidPostProcessing";
+    private static final String TAG  = "AndroidPostProcessing";
+
+    private static final String flag = "is_First_Install";
 
     private volatile static Application app;
 
@@ -75,14 +77,17 @@ public class AndroidPostProcessing {
 
 
     private void initAppDelegateMap(@NonNull final Application application) {
-        String flag = "first_install";
+
         SharedPreferences sp = application.getSharedPreferences(TAG, Context.MODE_PRIVATE);
         SharedPreferences.Editor edit = sp.edit();
         boolean isFirstInstall = sp.getBoolean(flag, true);
+
         if (isFirstInstall) {
             edit.putBoolean(flag, false).apply();
         }
+
         app = application;
+
         try {
             Set<String> set;
             if (isFirstInstall){
