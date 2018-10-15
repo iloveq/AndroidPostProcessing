@@ -1,8 +1,19 @@
 apply plugin: 'java-library'
 
+ext {
+    bintrayName = 'postprocessing-annotation'
+    artifact = bintrayName
+    libraryName = 'annotation'
+    libraryDescription = 'annotation used in AndroidPostProcessing'
+    libraryVersion = annotation_version
+}
+
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 }
 
-sourceCompatibility = "7"
-targetCompatibility = "7"
+sourceCompatibility = "1.8"
+targetCompatibility = "1.8"
+
+apply from: "${rootProject.projectDir}/installv1.gradle"
+apply from: "${rootProject.projectDir}/bintrayv1.gradle"

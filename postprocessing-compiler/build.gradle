@@ -1,5 +1,15 @@
 apply plugin: 'java-library'
 
+
+ext {
+    bintrayName = 'postprocessing-compiler'
+    artifact = bintrayName
+    libraryName = 'compiler'
+    libraryDescription = 'A compiler for AndroidPostProcessing'
+    libraryVersion = compiler_version
+}
+
+
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation project(':postprocessing-annotation')
@@ -7,6 +17,9 @@ dependencies {
 
 sourceCompatibility = "1.8"
 targetCompatibility = "1.8"
+
+apply from: "${rootProject.projectDir}/installv1.gradle"
+apply from: "${rootProject.projectDir}/bintrayv1.gradle"
 
 tasks.withType(JavaCompile) {
     options.encoding = 'UTF-8'

@@ -64,7 +64,7 @@ public class AndroidPostProcessing {
     private AndroidPostProcessing(@NonNull final Application app) {
         long start = System.currentTimeMillis();
         initAppDelegateMap(app);
-        Log.e(TAG, "init map time：" + String.valueOf(System.currentTimeMillis() - start) + "ms");
+        Log.e(TAG, "init map time   " + String.valueOf(System.currentTimeMillis() - start) + "ms");
         initCompleted.set(true);
     }
 
