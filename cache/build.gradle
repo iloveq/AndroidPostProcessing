@@ -23,5 +23,5 @@ android {
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation project(':common')
-    annotationProcessor project(':postprocessing-compiler')
+    annotationProcessor 'com.woaigmz.app:postprocessing-compiler:0.0.1'
 }

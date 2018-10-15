@@ -23,8 +23,8 @@ android {
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     api "com.android.support:appcompat-v7:${versions.support_library}"
-    api project(':postprocessing')
-    api project(':postprocessing-annotation')
-    annotationProcessor project(':postprocessing-compiler')
+    api 'com.woaigmz.app:postprocessing:0.0.1'
+    api 'com.woaigmz.app:postprocessing-annotation:0.0.1'
+    annotationProcessor 'com.woaigmz.app:postprocessing-compiler:0.0.1'
 
 }
