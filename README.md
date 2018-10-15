@@ -1,4 +1,4 @@
-# Application后处理器： 初始化各模块配置 按优先级/延时时间 实现
+# Application后处理器（AndroidPostProcessing）： 通过注解配置初始化各模块及应用所需 sdk，按优先级/延时时间/是否只在Debug下有效/执行线程  等条件初始化 sdk
 
 通常，我们要在 Application 中处理一堆的三方 SDK 和自定义框架的初始化，下面的处理方式会带来一些问题：
 维护成本，应用启动慢、卡顿，实现方式 low 。
