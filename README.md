@@ -39,17 +39,29 @@ Application 的后处理器，利用编译期注解方式，指定线程和任�
 ![postprocessing.gif](https://upload-images.jianshu.io/upload_images/8886407-d1cfae4b1bc48b39.gif?imageMogr2/auto-orient/strip)
 
 ### 使用方式：
-引入AndroidPostProcessing和注解处理器,后期有时间会上传maven ：）
+引入AndroidPostProcessing和注解处理器,已经上传maven ：）
+project/build.gradle
+```
+allprojects {
+    repositories {
+        ...
+        maven {
+            url  "https://dl.bintray.com/woaigmz/AndroidPostProcessing"
+        }
+    }
+}
+```
 common-lib 模块：
 ```
-    api project(':postprocessing')
-    api project(':postprocessing-annotation')
-    annotationProcessor project(':postprocessing-compiler')
+    api 'com.woaigmz.app:postprocessing:0.0.1'
+    api 'com.woaigmz.app:postprocessing-annotation:0.0.1'
+    //如果 common 模块需要用 @App 注解
+    annotationProcessor 'com.woaigmz.app:postprocessing-compiler:0.0.1'
 ```
 其他子模块：
 ```
     implementation project(':common')
-    annotationProcessor project(':postprocessing-compiler')
+    annotationProcessor 'com.woaigmz.app:postprocessing-compiler:0.0.1'
 ```
 
 1：Application:
