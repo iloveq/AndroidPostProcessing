@@ -8,9 +8,11 @@ import android.os.Looper;
 import android.os.Message;
 import android.os.Process;
 import android.support.annotation.NonNull;
+import android.util.Log;
 
 import com.woaiqw.postprocessing.model.AppDelegate;
 import com.woaiqw.postprocessing.utils.ClassUtils;
+import com.woaiqw.postprocessing.utils.PackageUtils;
 import com.woaiqw.postprocessing.utils.WeakHandler;
 
 import java.lang.reflect.Field;
@@ -33,7 +35,6 @@ public class AndroidPostProcessing {
 
     private static final String TAG = "AndroidPostProcessing";
 
-    private static final String flag = "is_First_Install";
 
     private volatile static Application app;
 
@@ -61,7 +62,9 @@ public class AndroidPostProcessing {
 
 
     private AndroidPostProcessing(@NonNull final Application app) {
+        long start = System.currentTimeMillis();
         initAppDelegateMap(app);
+        Log.e(TAG, "init map time：" + String.valueOf(System.currentTimeMillis() - start) + "ms");
         initCompleted.set(true);
     }
 
@@ -80,76 +83,87 @@ public class AndroidPostProcessing {
 
         SharedPreferences sp = application.getSharedPreferences(TAG, Context.MODE_PRIVATE);
         SharedPreferences.Editor edit = sp.edit();
-        boolean isFirstInstall = sp.getBoolean(flag, true);
 
-        if (isFirstInstall) {
-            edit.putBoolean(flag, false).apply();
-        }
+        String code = sp.getString("versionCode", "0");
+        String name = sp.getString("versionName", "0.0.0");
+
+        String versionCode = PackageUtils.getVersionCode(application);
+        String versionName = PackageUtils.getVersionName(application);
+        edit.putString("versionCode", versionCode).apply();
+        edit.putString("versionName", versionName).apply();
+
+        boolean versionChanged = !code.equals(versionCode) || !name.equals(versionName);
 
         app = application;
 
         try {
             Set<String> set;
-            if (isFirstInstall) {
+            if (versionChanged) {
                 set = ClassUtils.getFileNameByPackageName(application, parsePackageName);
                 edit.putStringSet(TAG, set).apply();
             } else {
                 set = sp.getStringSet(TAG, new HashSet<String>());
             }
-            for (String classPath : set) {
-                Class clazz = Class.forName(classPath);
-                Field[] fields = clazz.getFields();
 
-                if (fields != null && fields.length != 0) {
-                    IApp app = null;
-                    String name = "Main";
-                    boolean type = false;
-                    int priority = 0;
-                    boolean async = false;
-                    long delay = 0;
-                    for (Field field : fields) {
-                        String fieldName = field.getName();
-                        Object o = field.get(fieldName);
-                        switch (fieldName) {
-                            case "path":
-                                app = (IApp) Class.forName((String) o).newInstance();
-                                break;
-                            case "name":
-                                name = (String) o;
-                                break;
-                            case "debug":
-                                type = (boolean) o;
-                                break;
-                            case "priority":
-                                priority = (int) o;
-                                break;
-                            case "async":
-                                async = (boolean) o;
-                                break;
-                            case "delay":
-                                delay = (long) o;
-                                break;
-                        }
-                    }
+            parseSet2List(set);
 
-                    AppDelegate agent = new AppDelegate();
-                    agent.setAgent(app);
-                    agent.setName(name);
-                    agent.setType(type);
-                    agent.setPriority(priority);
-                    agent.setAsync(async);
-                    agent.setDelayTime(delay);
-                    agents.add(agent);
-
-                }
+            if (agents != null && agents.size() > 0) {
+                Collections.sort(agents);
             }
-
-            Collections.sort(agents);
 
         } catch (Exception e) {
             e.printStackTrace();
         }
 
+    }
+
+    private void parseSet2List(Set<String> set) throws ClassNotFoundException, IllegalAccessException, InstantiationException {
+        for (String classPath : set) {
+            Class clazz = Class.forName(classPath);
+            Field[] fields = clazz.getFields();
+
+            if (fields != null && fields.length != 0) {
+                IApp app = null;
+                String name = "Main";
+                boolean type = false;
+                int priority = 0;
+                boolean async = false;
+                long delay = 0;
+                for (Field field : fields) {
+                    String fieldName = field.getName();
+                    Object o = field.get(fieldName);
+                    switch (fieldName) {
+                        case "path":
+                            app = (IApp) Class.forName((String) o).newInstance();
+                            break;
+                        case "name":
+                            name = (String) o;
+                            break;
+                        case "debug":
+                            type = (boolean) o;
+                            break;
+                        case "priority":
+                            priority = (int) o;
+                            break;
+                        case "async":
+                            async = (boolean) o;
+                            break;
+                        case "delay":
+                            delay = (long) o;
+                            break;
+                    }
+                }
+
+                AppDelegate agent = new AppDelegate();
+                agent.setAgent(app);
+                agent.setName(name);
+                agent.setType(type);
+                agent.setPriority(priority);
+                agent.setAsync(async);
+                agent.setDelayTime(delay);
+                agents.add(agent);
+            }
+        }
     }
 
     public void dispatcher() {

@@ -26,5 +26,6 @@ dependencies {
     implementation project(':hotfix')
     implementation project(':main')
     implementation project(':plugin')
-
+    implementation project(':orm')
+    implementation project(':plugin')
 }
