@@ -7,7 +7,7 @@ import android.widget.Toast;
 import com.woaiqw.postprocessing.IApp;
 import com.woaiqw.postprocessingannotation.App;
 
-import hugo.weaving.DebugLog;
+//import hugo.weaving.DebugLog;
 
 /**
  * Created by haoran on 2018/10/10.
@@ -15,7 +15,7 @@ import hugo.weaving.DebugLog;
 @App(name = "Hotfix", priority = 3)
 public class HotfixProxy implements IApp {
 
-    @DebugLog
+   // @DebugLog
     @Override
     public void dispatcher(@NonNull Application application) {
 

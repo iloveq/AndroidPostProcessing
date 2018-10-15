@@ -1,5 +1,5 @@
 apply plugin: 'com.android.library'
-apply plugin: 'com.jakewharton.hugo'
+//apply plugin: 'com.jakewharton.hugo'
 android {
 
     compileSdkVersion rootProject.ext.compileSdkVersion
