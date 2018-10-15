@@ -31,7 +31,7 @@ public class AndroidPostProcessing {
 
     private static final String parsePackageName = "com.woaiqw.generate";
 
-    private static final String TAG  = "AndroidPostProcessing";
+    private static final String TAG = "AndroidPostProcessing";
 
     private static final String flag = "is_First_Install";
 
@@ -90,11 +90,11 @@ public class AndroidPostProcessing {
 
         try {
             Set<String> set;
-            if (isFirstInstall){
-               set = ClassUtils.getFileNameByPackageName(application, parsePackageName);
-               edit.putStringSet(TAG,set).apply();
-            }else {
-                set = sp.getStringSet(TAG,new HashSet<String>());
+            if (isFirstInstall) {
+                set = ClassUtils.getFileNameByPackageName(application, parsePackageName);
+                edit.putStringSet(TAG, set).apply();
+            } else {
+                set = sp.getStringSet(TAG, new HashSet<String>());
             }
             for (String classPath : set) {
                 Class clazz = Class.forName(classPath);
