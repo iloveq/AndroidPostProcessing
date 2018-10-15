@@ -169,6 +169,7 @@ public final class LeakCanary$$Proxy{
 ③ [AndroidPostProcessing](https://github.com/woaigmz/AndroidPostProcessing/blob/master/postprocessing/src/main/java/com/woaiqw/postprocessing/AndroidPostProcessing.java) 的api
   初始化注解生成的代理类，按 priority 生成代理列表List<AppDelegate>
   dispatcher 任务，WeakHandler + ScheduledThreadPool
+  SharePreference 缓存 优化性能
   资源释放
 
 感谢：）
