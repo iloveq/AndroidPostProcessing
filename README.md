@@ -62,6 +62,15 @@ common-lib 模块：
 ```
 其他子模块：
 ```
+defaultConfig {
+    ...
+    javaCompileOptions {
+                annotationProcessorOptions {
+                    includeCompileClasspath = true
+                }
+            }
+}
+
     implementation project(':common')
     annotationProcessor 'com.woaigmz.app:postprocessing-compiler:0.0.1'
 ```
