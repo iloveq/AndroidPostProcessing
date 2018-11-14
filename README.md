@@ -40,7 +40,7 @@ Application 的后处理器，利用编译期注解方式，指定线程和任�
 ![postprocessing.gif](https://upload-images.jianshu.io/upload_images/8886407-d1cfae4b1bc48b39.gif?imageMogr2/auto-orient/strip)
 
 ### 使用方式：
-
+关闭 instant run ，否则会解析失败
 引入AndroidPostProcessing和注解处理器,已经上传maven ：）
 project/build.gradle
 ```
