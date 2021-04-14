@@ -156,9 +156,9 @@ public class LeakCanaryProxy implements IApp {
 
 ### 实现思路：
 
-① 注解部分：编译生成的中间代理类，都在 com.woaiqw.generate 包下
+① 注解部分：编译生成的中间代理类，都在 com.iloveq.generate 包下
 ```
-package com.woaiqw.generate;
+package com.iloveq.generate;
 
 /**
 * Generated code from AndroidPostProcessing . Do not modify!
@@ -177,9 +177,9 @@ public final class LeakCanary$$Proxy{
 ```
 
 ② 注解处理器AbstractProcessor:
-[AppProcessor](https://github.com/woaigmz/AndroidPostProcessing/blob/master/postprocessing-compiler/src/main/java/com/woaiqw/appcompiler/AppProcessor.java)
+[AppProcessor](https://github.com/iloveq/AndroidPostProcessing/blob/master/postprocessing-compiler/src/main/java/com/iloveq/appcompiler/AppProcessor.java)
 
-③ [AndroidPostProcessing](https://github.com/woaigmz/AndroidPostProcessing/blob/master/postprocessing/src/main/java/com/woaiqw/postprocessing/AndroidPostProcessing.java) 的api
+③ [AndroidPostProcessing](https://github.com/iloveq/AndroidPostProcessing/blob/master/postprocessing/src/main/java/com/iloveq/postprocessing/AndroidPostProcessing.java) 的api
 
   初始化注解生成的代理类，按 priority 生成代理列表List<AppDelegate>
   dispatcher 任务，WeakHandler + ScheduledThreadPool
